@@ -1,0 +1,3 @@
+flask
+opencv-python
+pip-chill
