@@ -3,6 +3,7 @@ import base64
 import argparse
 import threading
 import time
+import random
 
 import logging
 log = logging.getLogger('werkzeug')
@@ -16,6 +17,7 @@ vc = None
 lock = threading.Lock()
 frame = None
 b64 = ''
+IMAGE_ID = -1
 
 def _thread_entry_fetch_image(timeout=16):
     while 1:
@@ -23,11 +25,16 @@ def _thread_entry_fetch_image(timeout=16):
         time.sleep(timeout * 0.001)
 
 def fetch_image():
-    global frame, b64
+    global frame, b64, IMAGE_ID
     with lock:
         retv, frame = vc.read()
         _, frame = cv2.imencode('.JPEG', frame)
         b64 = base64.b64encode(frame).decode("utf-8")
+
+        IMAGE_ID += 1
+        if IMAGE_ID > 1000:
+            IMAGE_ID = 1
+        
 
 @app.route('/')
 def home():
@@ -35,11 +42,13 @@ def home():
 
 @app.route('/get_image')
 def get_image():
-    if not vc or not b64:
+    image_id = int(flask.request.headers.get('Last-Image-ID'))
+    if image_id == IMAGE_ID:
+        return flask.jsonify({ "status": "error"})
+    elif not vc or not b64:
         return flask.jsonify({ "status": "error", "message": "No video feed available" })
-        
-    response = flask.jsonify({ "status": "ok", "base64": b64 })
-    return response
+    else:
+        return flask.jsonify({ "status": "ok", "base64": b64, "ID": IMAGE_ID})
 
 def main():
 

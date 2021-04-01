@@ -1,19 +1,35 @@
 const image = document.getElementById("image")
+let prevID = 0
 const getImage = () => {
-    fetch('/get_image')
-        .then(response => response.json())
-        .then(response => {
-            response = response.base64
+    var response = fetch('/get_image', {
+        method: "GET",
+        headers: {
+            'Last-Image-ID': prevID
+        }
+    }).then(response => 
+        response.json()
+    ).then(response => {
+        if (response.status === "ok") {
+            var id = response.ID;
+            if(id !== prevID) {
+                var b64 = response.base64;
+                b64.replace("b&#39;", "");
+                b64.replace("&#39;", "");
+                image.src = "data:image/jpg;base64," + b64;
 
-            if (!(response === undefined)){
-                response.replace("b&#39;", "");
-                response.replace("&#39;", "");
-                image.src = "data:image/jpg;base64," + response
+                prevID = id;
+                console.log("new id!");
             }
-            return response
-        })
+        }
+        return response;
+    })
+
+    var timeoutPromise = new Promise(r => setTimeout(r, 20));
+
+    Promise.all([response, timeoutPromise]).then(
+        v => getImage()
+    );
+    
 }
 
-setInterval(() => {
-    getImage()
-}, 16);
+getImage()
