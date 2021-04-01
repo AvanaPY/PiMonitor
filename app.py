@@ -35,11 +35,9 @@ def home():
 
 @app.route('/get_image')
 def get_image():
-    if not vc:
+    if not vc or not b64:
         return flask.jsonify({ "status": "error", "message": "No video feed available" })
-
-    while lock.locked() or not b64: 
-        pass
+        
     response = flask.jsonify({ "status": "ok", "base64": b64 })
     return response
 

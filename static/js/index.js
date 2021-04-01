@@ -10,6 +10,7 @@ const getImage = () => {
                 response.replace("&#39;", "");
                 image.src = "data:image/jpg;base64," + response
             }
+            return response
         })
 }
 
