@@ -64,7 +64,6 @@ def main():
             threaded=True, use_reloader=False)
 
     vc.release()
-    cv2.destroyWindow("preview")
 
 if __name__ == '__main__':
     main()
