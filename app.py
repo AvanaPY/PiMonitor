@@ -35,9 +35,12 @@ def home():
 
 @app.route('/get_image')
 def get_image():
+    if not vc:
+        return flask.jsonify({ "status": "error", "message": "No video feed available" })
+
     while lock.locked() or not b64: 
         pass
-    response = flask.jsonify({ "base64": b64 })
+    response = flask.jsonify({ "status": "ok", "base64": b64 })
     return response
 
 def main():
@@ -49,24 +52,29 @@ def main():
     ap.add_argument("-c", "--camera", type=int, default=0, help="Which camera index to run")
     args = vars(ap.parse_args())
 
-    global vc
+    global vc, frame
     vc = cv2.VideoCapture(args["camera"])
     
-    if not vc.isOpened():
-        print('Could not find a VideoCapture source.')
-        return
-    vc.set(3,1280)
-    vc.set(4,720)
+    if vc.isOpened():
+        vc.set(3,1280)
+        vc.set(4,720)
 
-    t = threading.Thread(target=_thread_entry_fetch_image)
-    t.daemon = True
-    t.start()
+        retv, frame = vc.read()
 
-    print(f"Running app at {args['ip']}:{args['port']}")
+        if not retv:
+            vc = None
+        else:
+            t = threading.Thread(target=_thread_entry_fetch_image)
+            t.daemon = True
+            t.start()
+    else:
+        vc = None
+
     app.run(host=args["ip"], port=args["port"], debug=True, 
             threaded=True, use_reloader=False)
 
-    vc.release()
+    if vc:
+        vc.release()
 
 if __name__ == '__main__':
     main()

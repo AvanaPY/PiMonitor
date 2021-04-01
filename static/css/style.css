@@ -1,0 +1,33 @@
+@import url(https://fonts.googleapis.com/css?family=Montserrat:300,700);
+:root {
+    --clr-background: grey;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    font-family: 'Montserrat';
+}
+header {
+    height: 75px;
+    width: 100%;
+    background: var(--clr-background);
+    display: flex;
+}
+
+.centered {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+}
+
+.text-centered {
+    text-align: center;
+}
+
+.container {
+    width: 80%;
+    margin: 1em auto;
+    display: flex;
+}

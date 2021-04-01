@@ -4,10 +4,17 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
     <title>PiMonitor</title>
 </head>
 <body>
-    <img src="" alt="Image" id="image" width="1280" height="720">
+    <header>
+        <h1 class="text-centered centered">PiMonitor Live</h1>
+    </header>
+    <div class="container">
+        <img src="{{ url_for('static', filename='img/default.jpg') }}" class="centered" id="image" width="1280" height="720">
+    </div>
     <script src="{{ url_for('static', filename='js/index.js') }}"></script>
 </body>
 </html>
