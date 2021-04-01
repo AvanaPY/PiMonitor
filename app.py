@@ -48,10 +48,11 @@ def main():
 
     ap.add_argument("-i", "--ip", type=str, required=True, help="Ip address of the device")
     ap.add_argument("-p", "--port", type=int, required=True, help="Port to run on")
+    ap.add_argument("-c", "--camera", type=int, default=0, help="Which camera index to run")
     args = vars(ap.parse_args())
 
     global vc
-    vc = cv2.VideoCapture(0)
+    vc = cv2.VideoCapture(args["camera"])
     if not vc.isOpened():
         print('Could not find a VideoCapture source.')
         return
