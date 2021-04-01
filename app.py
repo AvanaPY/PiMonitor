@@ -11,9 +11,7 @@ log.setLevel(logging.ERROR)
 import flask
 app = flask.Flask(__name__)
 
-vc = cv2.VideoCapture(0)
-vc.set(3,1280)
-vc.set(4,1024)
+vc = None
 
 lock = threading.Lock()
 frame = None
