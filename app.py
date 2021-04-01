@@ -51,9 +51,12 @@ def main():
 
     global vc
     vc = cv2.VideoCapture(args["camera"])
+    
     if not vc.isOpened():
         print('Could not find a VideoCapture source.')
         return
+    vc.set(3,1280)
+    vc.set(4,720)
 
     t = threading.Thread(target=_thread_entry_fetch_image)
     t.daemon = True
