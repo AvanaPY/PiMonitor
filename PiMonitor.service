@@ -1,0 +1,14 @@
+[Unit]
+Description=My Discord Bot
+After=network.target
+
+[Service]
+ExecStart=-----edit this to the appropriate path----
+WorkingDirectory=----this too----
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+User=pi
+
+[Install]
+WantedBy=multi-user.target
