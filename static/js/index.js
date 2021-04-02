@@ -1,35 +1,29 @@
 const image = document.getElementById("image")
 let prevID = 0
-const getImage = () => {
-    var response = fetch('/get_image', {
-        method: "GET",
-        headers: {
-            'Last-Image-ID': prevID
-        }
-    }).then(response => 
-        response.json()
-    ).then(response => {
-        if (response.status === "ok") {
-            var id = response.ID;
-            if(id !== prevID) {
-                var b64 = response.base64;
-                b64.replace("b&#39;", "");
-                b64.replace("&#39;", "");
-                image.src = "data:image/jpg;base64," + b64;
 
-                prevID = id;
-                console.log("new id!");
-            }
-        }
-        return response;
-    })
-
+const updatePage = () => {
+    var updateImagePromise = updateImage();
     var timeoutPromise = new Promise(r => setTimeout(r, 20));
-
-    Promise.all([response, timeoutPromise]).then(
-        v => getImage()
-    );
-    
+    Promise.all([updateImagePromise, timeoutPromise]).then(
+        v => updatePage()
+    );   
 }
 
-getImage()
+const updateImage = async () => {
+    var response = await fetch('/api/print?user=emil&pwd=123&data=time:left,image:base64:id',{
+        method: 'GET',
+    }).then(response => {
+        return response.json()
+    }).then(response => {
+        var b64 = response.data.image.base64;
+        b64.replace("b&#39;", "");
+        b64.replace("&#39;", "");
+        image.src = "data:image/jpg;base64," + b64;
+
+        prevID = response.data.image.id;
+    }).catch(error => {
+        console.log(`Error: ${error}`)
+    });
+}
+
+updatePage()

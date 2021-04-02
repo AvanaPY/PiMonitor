@@ -4,6 +4,8 @@ import argparse
 import threading
 import time
 import random
+from appdata import AppData
+appdata = AppData()
 
 import logging
 log = logging.getLogger('werkzeug')
@@ -34,24 +36,62 @@ def fetch_image():
         IMAGE_ID += 1
         if IMAGE_ID > 1000:
             IMAGE_ID = 1
-        
 
 @app.route('/')
 def home():
     return flask.render_template('index.html')
 
-@app.route('/get_image')
-def get_image():
-    image_id = int(flask.request.headers.get('Last-Image-ID'))
-    if image_id == IMAGE_ID:
-        return flask.jsonify({ "status": "error"})
-    elif not vc or not b64:
-        return flask.jsonify({ "status": "error", "message": "No video feed available" })
-    else:
-        return flask.jsonify({ "status": "ok", "base64": b64, "ID": IMAGE_ID})
+@app.route('/api/print')
+def api_print():
+    args = flask.request.args
+    user = args.get('user')
+    pwd = args.get('pwd')
+
+    if not user or not pwd:
+        return flask.jsonify({ 
+            "error": 400, 
+            "message": "Missing credentials"
+        }), 400
+
+    if not user == 'emil' or not pwd == '123':
+        return flask.jsonify({
+            "error": 400,
+            "message": "Invalid credentials"
+        })
+    
+    data_tags = args.get('data')
+    if not data_tags:
+        return flask.jsonify({
+            "error": 400,
+            "message": "No data tags"
+        })
+
+    data = {}
+    for tag in data_tags.split(','):
+        tag_args = tag.split(':')
+
+        tag = tag_args[0]
+        tag_args = tag_args[1:]
+
+        data_tag = {}
+        for arg in tag_args:
+            if tag == 'time':
+                if arg == 'left':
+                    data_tag[arg] = appdata.print_time_manager.time_left()
+            elif tag == 'image':
+                if arg == 'base64':
+                    data_tag[arg] = b64
+                if arg == 'id':
+                    data_tag[arg] = IMAGE_ID
+
+        data[tag] = data_tag
+
+    return flask.jsonify({ 
+        "status": "ok", 
+        "data": data 
+    })
 
 def main():
-
     ap = argparse.ArgumentParser()
 
     ap.add_argument("-i", "--ip", type=str, required=True, help="Ip address of the device")
@@ -85,3 +125,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+    # print(appdata)
