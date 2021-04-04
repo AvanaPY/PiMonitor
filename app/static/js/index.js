@@ -17,14 +17,17 @@ const updateImage = async () => {
         }).then(response => {
             return response.json()
         }).then(response => {
-            var b64 = response.data.image.base64;
-            b64.replace("b&#39;", "");
-            b64.replace("&#39;", "");
-            image.src = "data:image/jpg;base64," + b64;
-
-            prevID = response.data.image.id;
+            if (response.status === 200) {
+                var b64 = response.data.image.base64;
+                b64.replace("b&#39;", "");
+                b64.replace("&#39;", "");
+                image.src = "data:image/jpg;base64," + b64;
+    
+                prevID = response.data.image.id;
+            }
         }).catch(error => {
-            console.log(`Error: ${error}`)
+            console.log(`Error: ${error}`);
+            console.log(response);
         });
     }
 }

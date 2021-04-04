@@ -2,6 +2,9 @@ import os
 import sys
 import argparse
 
+from dotenv import load_dotenv
+load_dotenv()
+
 import logging
 log = logging.getLogger('werkzeug')
 log.setLevel(logging.ERROR)

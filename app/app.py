@@ -5,6 +5,8 @@ import time
 from .appdata import AppData
 appdata = AppData()
 
+from .credentials import verify_credentials
+
 import flask
 flask_app = flask.Flask(__name__)
 
@@ -18,13 +20,9 @@ def api_print():
     user = args.get('user')
     pwd = args.get('pwd')
 
-    if not user or not pwd:
-        return flask.jsonify({ 
-            "error": 400, 
-            "message": "Missing credentials"
-        }), 400
+    ok = verify_credentials(user, pwd)
 
-    if not user == 'emil' or not pwd == '123':
+    if not ok:
         return flask.jsonify({
             "error": 400,
             "message": "Invalid credentials"
@@ -60,7 +58,7 @@ def api_print():
     appdata.GRAB_NEW_IMAGE_READY = True
 
     return flask.jsonify({ 
-        "status": "ok", 
+        "status": 200, 
         "data": data 
     })
 
