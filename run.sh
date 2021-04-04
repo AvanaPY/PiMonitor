@@ -20,7 +20,7 @@ fi
 echo Found virtual environment $ENV_BIN_OR_SCRIPTS
 
 PYTHON=$ENV_BIN_OR_SCRIPTS/python
-MAIN=$DIR/app.py
+MAIN=$DIR/__main__.py
 
 # Check if virtual environment exists
 if [ ! -e $PYTHON ]; then
