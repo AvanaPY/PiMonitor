@@ -5,6 +5,8 @@
     margin-top: 1em;
 }
 #image {
+    max-width: 1280px;
+    max-height: 720px;
     width: 100%;
     height: auto;
 }
