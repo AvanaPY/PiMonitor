@@ -13,7 +13,9 @@
         <h1 class="text-centered centered">PiMonitor Live</h1>
     </header>
     <div class="container">
-        <img src="{{ url_for('static', filename='img/default.jpg') }}" class="centered" id="image" width="1280" height="720">
+        <div class="image-container">
+            <img src="{{ url_for('static', filename='img/default.jpg') }}" class="centered" id="image">
+        </div>
     </div>
     <script src="{{ url_for('static', filename='js/index.js') }}"></script>
 </body>

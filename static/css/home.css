@@ -1,0 +1,16 @@
+.image-container {
+    width: 100%;
+    height: auto;
+    display: flex;
+    margin-top: 1em;
+}
+#image {
+    width: 100%;
+    height: auto;
+}
+
+@media only screen and (max-width: 800px) {
+    .image-container {
+        margin-top: 0.5em;
+    }
+}

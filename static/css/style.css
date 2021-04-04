@@ -28,6 +28,16 @@ header {
 
 .container {
     width: 80%;
-    margin: 1em auto;
+    margin: 0 auto;
     display: flex;
+}
+
+@media only screen and (max-width: 800px) {
+    .container {
+        width: 95%;
+    }
+
+    h1 {
+        font-size: 24px;
+    }
 }
