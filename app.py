@@ -21,9 +21,17 @@ frame = None
 b64 = ''
 IMAGE_ID = -1
 
+GRAB_NEW_IMAGE_READY = False
+
 def _thread_entry_fetch_image(timeout=16):
+    global GRAB_NEW_IMAGE_READY
     while 1:
-        fetch_image()
+        if GRAB_NEW_IMAGE_READY:
+            fetch_image()
+            GRAB_NEW_IMAGE_READY = False
+            print(f'Read image')
+        else:
+            print('Skipping reading image')
         time.sleep(timeout * 0.001)
 
 def fetch_image():
@@ -85,6 +93,9 @@ def api_print():
                     data_tag[arg] = IMAGE_ID
 
         data[tag] = data_tag
+
+    global GRAB_NEW_IMAGE_READY
+    GRAB_NEW_IMAGE_READY = True
 
     return flask.jsonify({ 
         "status": "ok", 
