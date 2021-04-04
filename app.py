@@ -29,9 +29,7 @@ def _thread_entry_fetch_image(timeout=16):
         if GRAB_NEW_IMAGE_READY:
             fetch_image()
             GRAB_NEW_IMAGE_READY = False
-            print(f'Read image')
-        else:
-            print('Skipping reading image')
+            
         time.sleep(timeout * 0.001)
 
 def fetch_image():
